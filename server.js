@@ -3,11 +3,19 @@
  *  this file is executed by the Node server
  */
 
+// import the http module, which provides an HTTP server
+const http = require("http");
+
 // import the express module, which exports the express function
 const express = require("express");
 
 // invoke the express function to create an Express application
 const app = express();
+const server = http.createServer(app);
+
+// create a new web socket server object
+const { createSocketServer } = require("./server/socket/socket");
+createSocketServer(server);
 
 // load environment variables from the .env file into process.env
 const dotenv = require("dotenv");
@@ -55,6 +63,6 @@ app.use(async (req, res, next) => {
 app.use("/", require("./server/routes/router"));
 
 // start the server on port 8080
-app.listen(8080, () => {
+server.listen(8080, () => {
   console.log("server is listening on http://localhost:8080");
 });

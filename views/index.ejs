@@ -10,7 +10,7 @@
     <a href="/createEntry" role="button">Create Entry</a>
   </div>
 
-  <div class="entries">
+  <div class="entries" id="entries">
     <% for(let entry of entries) { %>
     <div class="entry">
       <div><%= entry.date %></div>
@@ -27,6 +27,7 @@
 </main>
 <!-- /Main Site -->
 
+<script src="/socket.io/socket.io.js"></script>
 <script src="/js/index.js"></script>
 
 <!-- include footer -->

@@ -1,6 +1,7 @@
 const express = require("express");
 const route = express.Router();
 const Entry = require("../model/entry");
+const { emitNewEntry } = require("../socket/socket");
 
 // easy way to assign static data (e.g., array of strings) to a variable
 const habitsOfMind = require("../model/habitsOfMind.json");
@@ -30,6 +31,8 @@ route.get("/", async (req, res) => {
 });
 
 route.get("/createEntry", (req, res) => {
+  // a parameter object can be passed to the EJS template;
+  //  the key is the name of the variable in the EJS template
   res.render("createEntry", { habits: habitsOfMind });
 });
 
@@ -41,6 +44,13 @@ route.post("/createEntry", async (req, res) => {
     content: req.body.content,
   });
   await entry.save();
+
+  emitNewEntry({
+    id: entry._id,
+    date: entry.date.toLocaleDateString(),
+    habit: entry.habit,
+    content: entry.content.slice(0, 20) + "...",
+  });
 
   res.status(201).end();
 });
